@@ -2,144 +2,155 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#0b1020" />
-  <title>Finanças Mobile — Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#070a14" />
+  <title>LifeOS — Mobile</title>
   <style>
     :root{
-      --bg0:#070a14;
-      --bg1:#0b1020;
-      --card: rgba(255,255,255,.06);
-      --card2: rgba(255,255,255,.08);
-      --stroke: rgba(255,255,255,.12);
+      --bg0:#050712;
+      --bg1:#0a1030;
+      --glass: rgba(255,255,255,.08);
+      --glass2: rgba(255,255,255,.12);
+      --stroke: rgba(255,255,255,.14);
       --text: rgba(255,255,255,.92);
       --muted: rgba(255,255,255,.62);
       --good:#38d996;
       --bad:#ff5c7a;
       --warn:#ffd166;
-      --shadow: 0 18px 45px rgba(0,0,0,.55);
+      --shadow: 0 18px 50px rgba(0,0,0,.55);
       --radius: 18px;
+      --radius2: 22px;
+      --pad: 14px;
+      --max: 1024px;
     }
 
     *{ box-sizing:border-box; }
-    html,body{ height:100%; }
+    html, body{ height:100%; }
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
       color:var(--text);
-      background:
-        radial-gradient(1200px 900px at 10% 10%, rgba(120,90,255,.22), transparent 55%),
-        radial-gradient(900px 700px at 90% 20%, rgba(50,210,255,.18), transparent 55%),
-        radial-gradient(900px 700px at 50% 90%, rgba(255,130,200,.14), transparent 60%),
-        linear-gradient(180deg, var(--bg0), var(--bg1));
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: linear-gradient(180deg, var(--bg0), var(--bg1));
       overflow-x:hidden;
     }
 
-    /* estrelas fake (leve, sem imagem) */
-    .stars{
-      position:fixed; inset:0; pointer-events:none; opacity:.55;
-      background-image:
-        radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.9) 50%, transparent 51%),
-        radial-gradient(1px 1px at 30% 80%, rgba(255,255,255,.7) 50%, transparent 51%),
-        radial-gradient(1px 1px at 70% 30%, rgba(255,255,255,.8) 50%, transparent 51%),
-        radial-gradient(1px 1px at 85% 75%, rgba(255,255,255,.6) 50%, transparent 51%),
-        radial-gradient(1px 1px at 55% 55%, rgba(255,255,255,.7) 50%, transparent 51%),
-        radial-gradient(1px 1px at 15% 55%, rgba(255,255,255,.55) 50%, transparent 51%),
-        radial-gradient(1px 1px at 95% 45%, rgba(255,255,255,.55) 50%, transparent 51%);
-      background-size: 340px 340px;
-      filter: drop-shadow(0 0 6px rgba(255,255,255,.18));
-      animation: twinkle 10s linear infinite;
-    }
-    @keyframes twinkle{
-      0%{ transform:translateY(0); opacity:.52; }
-      50%{ transform:translateY(-6px); opacity:.62; }
-      100%{ transform:translateY(0); opacity:.52; }
+    /* Animated background canvas */
+    #bg{
+      position:fixed; inset:0; z-index:-2;
+      width:100%; height:100%;
+      display:block;
+      background: radial-gradient(1200px 900px at 10% 20%, rgba(140,120,255,.18), transparent 60%),
+                  radial-gradient(900px 700px at 90% 10%, rgba(50,210,255,.14), transparent 60%),
+                  radial-gradient(900px 700px at 50% 90%, rgba(255,130,200,.10), transparent 65%),
+                  linear-gradient(180deg, rgba(5,7,18,.35), rgba(10,16,48,.55));
+      filter: saturate(1.1);
     }
 
+    /* App shell */
     header{
-      position:sticky; top:0; z-index:10;
+      position: sticky; top:0; z-index: 10;
       backdrop-filter: blur(16px);
-      background: linear-gradient(180deg, rgba(11,16,32,.78), rgba(11,16,32,.35));
-      border-bottom: 1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(5,7,18,.78), rgba(5,7,18,.35));
+      border-bottom: 1px solid rgba(255,255,255,.10);
     }
-    .wrap{ max-width: 980px; margin: 0 auto; padding: 14px 16px; }
-    .top{
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
+    .wrap{ max-width: var(--max); margin: 0 auto; padding: 12px 14px; }
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between; gap: 10px;
     }
-    .brand{
-      display:flex; flex-direction:column; gap:2px;
-    }
+    .brand{ display:flex; flex-direction:column; gap:2px; }
     .brand h1{
-      font-size: 16px; margin:0; letter-spacing:.2px;
+      margin:0; font-size: 15px; letter-spacing:.2px;
+      display:flex; align-items:center; gap:8px;
     }
-    .brand p{
-      margin:0; font-size:12px; color:var(--muted);
-    }
-    .seg{
-      display:flex; gap:8px; align-items:center;
-    }
+    .brand p{ margin:0; font-size:12px; color:var(--muted); }
+
+    .chips{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end; }
     select, input, button{
       font:inherit;
-    }
-    select, input{
-      background: rgba(255,255,255,.06);
       color: var(--text);
-      border: 1px solid var(--stroke);
-      border-radius: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
       padding: 10px 12px;
-      outline:none;
+      outline: none;
     }
+    input::placeholder{ color: rgba(255,255,255,.45); }
     select:focus, input:focus{
       border-color: rgba(170,140,255,.55);
       box-shadow: 0 0 0 4px rgba(170,140,255,.12);
     }
     button{
-      border: 1px solid var(--stroke);
-      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
-      color: var(--text);
-      border-radius: 14px;
-      padding: 10px 12px;
       cursor:pointer;
-      box-shadow: 0 10px 24px rgba(0,0,0,.35);
+      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      box-shadow: 0 10px 26px rgba(0,0,0,.35);
       transition: transform .08s ease, border-color .12s ease;
     }
     button:active{ transform: translateY(1px) scale(.99); }
     .primary{
       border-color: rgba(160,140,255,.55);
-      background: linear-gradient(180deg, rgba(160,140,255,.32), rgba(255,255,255,.08));
+      background: linear-gradient(180deg, rgba(160,140,255,.34), rgba(255,255,255,.08));
     }
     .danger{
       border-color: rgba(255,92,122,.55);
       background: linear-gradient(180deg, rgba(255,92,122,.28), rgba(255,255,255,.06));
     }
 
-    main .wrap{ padding-top: 16px; padding-bottom: 90px; }
+    main .wrap{ padding-top: 14px; padding-bottom: 92px; }
 
+    /* Tabs */
+    .tabs{
+      display:flex; gap:10px;
+      padding: 10px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.12);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+      overflow:auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .tab{
+      white-space:nowrap;
+      border-radius: 14px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--muted);
+      user-select:none;
+    }
+    .tab.active{
+      color: var(--text);
+      border-color: rgba(160,140,255,.55);
+      background: linear-gradient(180deg, rgba(160,140,255,.30), rgba(255,255,255,.07));
+    }
+
+    /* Cards */
     .grid{
       display:grid;
       grid-template-columns: 1fr;
       gap: 12px;
+      margin-top: 12px;
     }
-    @media (min-width: 880px){
-      .grid{ grid-template-columns: 1.2fr .8fr; gap: 14px; }
+    @media (min-width: 900px){
+      .grid{ grid-template-columns: 1.25fr .75fr; gap: 14px; }
     }
 
     .card{
-      background: linear-gradient(180deg, var(--card2), var(--card));
-      border: 1px solid var(--stroke);
-      border-radius: var(--radius);
+      position:relative;
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,255,255,.12);
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
       box-shadow: var(--shadow);
       overflow:hidden;
-      position:relative;
     }
     .card::before{
       content:"";
       position:absolute; inset:-1px;
-      background: radial-gradient(500px 200px at 10% 0%, rgba(160,140,255,.18), transparent 60%),
-                  radial-gradient(420px 160px at 90% 0%, rgba(50,210,255,.14), transparent 65%);
+      background:
+        radial-gradient(520px 210px at 10% 0%, rgba(160,140,255,.18), transparent 60%),
+        radial-gradient(520px 210px at 90% 0%, rgba(50,210,255,.14), transparent 65%);
       pointer-events:none;
     }
-    .card > .inner{ position:relative; padding: 14px; }
+    .inner{ position:relative; padding: 14px; }
     .title{
       display:flex; align-items:baseline; justify-content:space-between; gap:10px;
       margin-bottom: 10px;
@@ -157,46 +168,25 @@
     }
     .kpi{
       padding: 12px;
-      border-radius: 16px;
+      border-radius: 18px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(0,0,0,.12);
       box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
     }
     .kpi .label{ color:var(--muted); font-size: 11px; }
-    .kpi .value{ font-weight: 700; font-size: 16px; margin-top: 6px; }
+    .kpi .value{ font-weight: 800; font-size: 16px; margin-top: 6px; }
     .kpi .sub{ color:var(--muted); font-size: 11px; margin-top: 6px; }
 
-    .row{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:10px;
-    }
-    .row3{
-      display:grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap:10px;
-    }
-    @media (max-width: 520px){
+    .row2{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+    .row3{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; }
+    .full{ grid-column: 1 / -1; }
+    @media (max-width: 540px){
+      .row2{ grid-template-columns: 1fr; }
       .row3{ grid-template-columns: 1fr; }
     }
-    .full{ grid-column: 1 / -1; }
 
     .hint{ color:var(--muted); font-size: 12px; line-height:1.35; }
 
-    .table{
-      width:100%;
-      border-collapse: collapse;
-      font-size: 12px;
-      overflow:hidden;
-    }
-    .table th, .table td{
-      text-align:left;
-      padding: 10px 8px;
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      vertical-align: top;
-      word-break: break-word;
-    }
-    .table th{ color: var(--muted); font-weight: 600; }
     .pill{
       display:inline-flex; align-items:center; gap:6px;
       padding: 4px 10px;
@@ -207,44 +197,81 @@
       color: var(--muted);
       white-space: nowrap;
     }
-    .pill.good{ border-color: rgba(56,217,150,.35); color: rgba(56,217,150,.9); }
+    .pill.good{ border-color: rgba(56,217,150,.35); color: rgba(56,217,150,.92); }
     .pill.bad{ border-color: rgba(255,92,122,.35); color: rgba(255,92,122,.92); }
+    .pill.warn{ border-color: rgba(255,209,102,.35); color: rgba(255,209,102,.95); }
 
+    /* Lists */
+    .list{ display:flex; flex-direction:column; gap:10px; }
+    .item{
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.12);
+      padding: 12px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
+      display:flex; justify-content:space-between; gap:10px; align-items:flex-start;
+    }
+    .item .main{
+      display:flex; flex-direction:column; gap:6px;
+      min-width: 0;
+    }
+    .item .main b{ font-size: 13px; }
+    .item .main .meta{ display:flex; gap:8px; flex-wrap:wrap; }
+    .item .main .meta .pill{ max-width: 100%; }
+    .item .actions{ display:flex; gap:8px; flex-shrink:0; }
+    .iconbtn{
+      padding: 8px 10px;
+      border-radius: 14px;
+    }
+
+    /* Chart */
+    canvas.chart{
+      width:100%;
+      height: 170px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.10);
+      display:block;
+    }
+
+    /* Bottom bar */
     .footerbar{
-      position:fixed; left:0; right:0; bottom:0; z-index:12;
-      background: linear-gradient(180deg, rgba(11,16,32,0), rgba(11,16,32,.88));
-      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+      position:fixed; left:0; right:0; bottom:0; z-index: 12;
+      background: linear-gradient(180deg, rgba(5,7,18,0), rgba(5,7,18,.88));
       border-top: 1px solid rgba(255,255,255,.10);
       backdrop-filter: blur(14px);
+      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
     }
     .footerbar .wrap{
-      max-width: 980px;
+      max-width: var(--max);
       margin: 0 auto;
       display:flex;
       gap:10px;
     }
-    .footerbar button{ flex:1; padding: 12px; border-radius: 16px; }
-    .muted-link{ color: var(--muted); text-decoration: none; }
-    .muted-link:hover{ text-decoration: underline; }
+    .footerbar button{ flex:1; padding: 12px; border-radius: 18px; }
 
-    canvas{ width:100%; height: 160px; background: rgba(0,0,0,.10); border-radius: 16px; border:1px solid rgba(255,255,255,.08); }
+    /* Hide sections */
+    .section{ display:none; }
+    .section.active{ display:block; }
+
+    .sep{ height: 10px; }
   </style>
 </head>
 
 <body>
-  <div class="stars"></div>
+  <canvas id="bg"></canvas>
 
   <header>
     <div class="wrap">
-      <div class="top">
+      <div class="topbar">
         <div class="brand">
-          <h1>💫 Finanças Mobile</h1>
-          <p>Dashboard offline • salva no aparelho</p>
+          <h1>🪐 LifeOS <span class="pill">offline</span></h1>
+          <p id="subtitle">Hoje: —</p>
         </div>
-
-        <div class="seg">
+        <div class="chips">
           <select id="monthSelect" aria-label="Mês"></select>
-          <button id="exportBtn" title="Exportar dados (.json)">Exportar</button>
+          <button id="exportBtn" title="Exportar dados">Exportar</button>
+          <button class="danger" id="resetBtn" title="Zerar tudo">Reset</button>
         </div>
       </div>
     </div>
@@ -252,217 +279,524 @@
 
   <main>
     <div class="wrap">
-      <div class="grid">
-        <!-- DASHBOARD -->
-        <section class="card">
-          <div class="inner">
-            <div class="title">
-              <h2>📊 Dashboard do mês</h2>
-              <small id="monthLabel"></small>
-            </div>
+      <div class="tabs" id="tabs">
+        <div class="tab active" data-tab="home">🏠 Home</div>
+        <div class="tab" data-tab="tasks">✅ Tarefas</div>
+        <div class="tab" data-tab="habits">🔁 Hábitos</div>
+        <div class="tab" data-tab="finance">💸 Finanças</div>
+        <div class="tab" data-tab="agenda">📅 Agenda</div>
+      </div>
 
-            <div class="kpis">
-              <div class="kpi">
-                <div class="label">Saldo do mês</div>
-                <div class="value" id="kpiSaldo">R$ 0,00</div>
-                <div class="sub" id="kpiSaldoSub">Receitas − Despesas</div>
+      <!-- HOME -->
+      <section class="section active" id="home">
+        <div class="grid">
+          <div class="card">
+            <div class="inner">
+              <div class="title">
+                <h2>✨ Hoje</h2>
+                <small id="todayLabel">—</small>
               </div>
-              <div class="kpi">
-                <div class="label">Receitas</div>
-                <div class="value" id="kpiReceitas">R$ 0,00</div>
-                <div class="sub" id="kpiReceitasSub">Total no mês</div>
+
+              <div class="kpis">
+                <div class="kpi">
+                  <div class="label">Tarefas hoje</div>
+                  <div class="value" id="kpiTasks">0</div>
+                  <div class="sub" id="kpiTasksSub">pendentes</div>
+                </div>
+                <div class="kpi">
+                  <div class="label">Hábitos hoje</div>
+                  <div class="value" id="kpiHabits">0%</div>
+                  <div class="sub" id="kpiHabitsSub">cumpridos</div>
+                </div>
+                <div class="kpi">
+                  <div class="label">Saldo do mês</div>
+                  <div class="value" id="kpiSaldo">R$ 0,00</div>
+                  <div class="sub">receitas − despesas</div>
+                </div>
               </div>
-              <div class="kpi">
-                <div class="label">Despesas</div>
-                <div class="value" id="kpiDespesas">R$ 0,00</div>
-                <div class="sub" id="kpiDespesasSub">Total no mês</div>
+
+              <div class="sep"></div>
+
+              <div class="title">
+                <h2>✅ Próximas tarefas</h2>
+                <small class="hint">toque para concluir</small>
               </div>
+              <div class="list" id="homeTasks"></div>
             </div>
-
-            <div style="height:12px"></div>
-
-            <div class="title">
-              <h2>✨ Despesas por categoria</h2>
-              <small class="hint">Top 6 (mês)</small>
-            </div>
-            <canvas id="chart"></canvas>
-
-            <div style="height:12px"></div>
-            <div id="topCats" class="hint"></div>
           </div>
-        </section>
 
-        <!-- LANÇAMENTO -->
-        <section class="card">
-          <div class="inner">
-            <div class="title">
-              <h2>➕ Lançar transação</h2>
-              <small class="hint">mobile-first</small>
+          <div class="card">
+            <div class="inner">
+              <div class="title">
+                <h2>🔁 Hábitos (checklist)</h2>
+                <small class="hint">marque o dia</small>
+              </div>
+              <div class="list" id="homeHabits"></div>
+
+              <div class="sep"></div>
+
+              <div class="title">
+                <h2>📅 Próximos eventos</h2>
+                <small class="hint">7 dias</small>
+              </div>
+              <div class="list" id="homeEvents"></div>
             </div>
+          </div>
+        </div>
+      </section>
 
-            <div class="row">
-              <div class="full">
-                <input id="desc" placeholder="Descrição (ex.: Mercado, Salário...)" />
+      <!-- TASKS -->
+      <section class="section" id="tasks">
+        <div class="grid">
+          <div class="card">
+            <div class="inner">
+              <div class="title">
+                <h2>➕ Nova tarefa</h2>
+                <small class="hint">mobile-first</small>
               </div>
 
-              <div>
-                <input id="value" type="number" step="0.01" inputmode="decimal" placeholder="Valor (ex.: 39.90)" />
+              <div class="row2">
+                <input id="taskTitle" class="full" placeholder="Nome da tarefa (ex.: pagar fatura)" />
+                <select id="taskPriority">
+                  <option value="🔥 Alta">🔥 Alta</option>
+                  <option value="✳️ Média" selected>✳️ Média</option>
+                  <option value="🧊 Baixa">🧊 Baixa</option>
+                </select>
+                <select id="taskStatus">
+                  <option value="Próxima" selected>Próxima</option>
+                  <option value="Fazendo">Fazendo</option>
+                  <option value="Backlog">Backlog</option>
+                  <option value="Feito">Feito</option>
+                </select>
+                <input id="taskDate" type="date" />
+                <input id="taskArea" placeholder="Área (ex.: Saúde, Finanças)" />
+                <button class="primary full" id="addTaskBtn">Salvar tarefa</button>
+              </div>
+              <div class="hint">Dica: use Data pra aparecer na Home automaticamente.</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="inner">
+              <div class="title">
+                <h2>📌 Lista</h2>
+                <small>
+                  <span class="pill" id="taskFilterToday">Hoje</span>
+                  <span class="pill" id="taskFilterWeek">Semana</span>
+                  <span class="pill" id="taskFilterAll">Todas</span>
+                </small>
+              </div>
+              <div class="list" id="tasksList"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- HABITS -->
+      <section class="section" id="habits">
+        <div class="grid">
+          <div class="card">
+            <div class="inner">
+              <div class="title">
+                <h2>➕ Novo hábito</h2>
+                <small class="hint">fica salvo</small>
               </div>
 
-              <div>
-                <select id="type">
-                  <option value="despesa">Despesa</option>
+              <div class="row2">
+                <input id="habitName" class="full" placeholder="Hábito (ex.: beber 2L de água)" />
+                <select id="habitFreq">
+                  <option value="Diário" selected>Diário</option>
+                  <option value="3x semana">3x semana</option>
+                  <option value="Semanal">Semanal</option>
+                </select>
+                <input id="habitArea" placeholder="Área (ex.: Saúde)" />
+                <button class="primary full" id="addHabitBtn">Salvar hábito</button>
+              </div>
+              <div class="hint">O checklist de hoje aparece na Home automaticamente.</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="inner">
+              <div class="title">
+                <h2>✅ Checklist de hoje</h2>
+                <small class="hint">toque para marcar</small>
+              </div>
+              <div class="list" id="habitsTodayList"></div>
+
+              <div class="sep"></div>
+
+              <div class="title">
+                <h2>📈 Últimos 7 dias</h2>
+                <small class="hint">taxa de cumprimento</small>
+              </div>
+              <canvas class="chart" id="habitsChart"></canvas>
+              <div class="sep"></div>
+              <div class="hint" id="habitsSummary"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FINANCE -->
+      <section class="section" id="finance">
+        <div class="grid">
+          <div class="card">
+            <div class="inner">
+              <div class="title">
+                <h2>📊 Finanças do mês</h2>
+                <small id="monthLabel">—</small>
+              </div>
+              <div class="kpis">
+                <div class="kpi">
+                  <div class="label">Saldo</div>
+                  <div class="value" id="finSaldo">R$ 0,00</div>
+                  <div class="sub">mês</div>
+                </div>
+                <div class="kpi">
+                  <div class="label">Receitas</div>
+                  <div class="value" id="finRec">R$ 0,00</div>
+                  <div class="sub">mês</div>
+                </div>
+                <div class="kpi">
+                  <div class="label">Despesas</div>
+                  <div class="value" id="finDesp">R$ 0,00</div>
+                  <div class="sub">mês</div>
+                </div>
+              </div>
+
+              <div class="sep"></div>
+
+              <div class="title">
+                <h2>🌈 Despesas por categoria</h2>
+                <small class="hint">Top 6</small>
+              </div>
+              <canvas class="chart" id="financeChart"></canvas>
+              <div class="sep"></div>
+              <div class="hint" id="financeCats"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="inner">
+              <div class="title">
+                <h2>➕ Lançar transação</h2>
+                <small class="hint">toque para excluir na lista</small>
+              </div>
+
+              <div class="row2">
+                <input id="txDesc" class="full" placeholder="Descrição (ex.: Mercado, Salário...)" />
+                <input id="txValue" type="number" step="0.01" inputmode="decimal" placeholder="Valor (ex.: 39.90)" />
+                <select id="txType">
+                  <option value="despesa" selected>Despesa</option>
                   <option value="receita">Receita</option>
                 </select>
-              </div>
-
-              <div>
-                <select id="category"></select>
-              </div>
-
-              <div>
-                <select id="account">
-                  <option>Cartão</option>
-                  <option>Pix</option>
-                  <option>Dinheiro</option>
-                  <option>Banco</option>
+                <select id="txCat"></select>
+                <select id="txAcc">
+                  <option>Cartão</option><option>Pix</option><option>Dinheiro</option><option>Banco</option>
                 </select>
+                <input id="txDate" type="date" />
+                <button class="primary full" id="addTxBtn">Salvar transação</button>
               </div>
 
-              <div>
-                <input id="date" type="date" />
+              <div class="sep"></div>
+              <div class="title">
+                <h2>🧾 Últimas do mês</h2>
+                <small class="hint">12 itens</small>
               </div>
-
-              <div class="full">
-                <button class="primary" id="addBtn">Salvar transação</button>
-              </div>
+              <div class="list" id="txList"></div>
             </div>
-
-            <div style="height:14px"></div>
-
-            <div class="title">
-              <h2>🧾 Últimas transações</h2>
-              <small class="hint">toque para excluir</small>
-            </div>
-
-            <div style="overflow:auto">
-              <table class="table" id="txTable">
-                <thead>
-                  <tr>
-                    <th>Data</th>
-                    <th>Descrição</th>
-                    <th>Categoria</th>
-                    <th>Valor</th>
-                  </tr>
-                </thead>
-                <tbody></tbody>
-              </table>
-            </div>
-
-            <div style="height:10px"></div>
-            <div class="hint">
-              Dica: no celular, adicione à tela inicial para ficar com cara de app.
-            </div>
-
-            <div style="height:10px"></div>
-            <button class="danger" id="resetBtn">Zerar tudo</button>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
+
+      <!-- AGENDA -->
+      <section class="section" id="agenda">
+        <div class="grid">
+          <div class="card">
+            <div class="inner">
+              <div class="title">
+                <h2>➕ Novo evento</h2>
+                <small class="hint">data e hora</small>
+              </div>
+
+              <div class="row2">
+                <input id="evTitle" class="full" placeholder="Evento (ex.: dentista, reunião...)" />
+                <input id="evDateTime" class="full" type="datetime-local" />
+                <input id="evPlace" placeholder="Local (opcional)" />
+                <input id="evTag" placeholder="Tipo (ex.: Saúde, Trabalho)" />
+                <button class="primary full" id="addEvBtn">Salvar evento</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="inner">
+              <div class="title">
+                <h2>📅 Próximos 30 dias</h2>
+                <small class="hint">toque para excluir</small>
+              </div>
+              <div class="list" id="eventsList"></div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   </main>
 
   <div class="footerbar">
     <div class="wrap">
-      <button class="primary" id="quickExpense">+ Despesa rápida</button>
-      <button id="quickIncome">+ Receita rápida</button>
+      <button class="primary" id="quickTask">+ Tarefa</button>
+      <button id="quickTx">+ Gasto</button>
     </div>
   </div>
 
 <script>
 (() => {
-  const STORAGE_KEY = "financas_mobile_v1";
+  /* =========================
+     BACKGROUND: Stars + Aurora
+     ========================= */
+  const bg = document.getElementById("bg");
+  const bctx = bg.getContext("2d");
+  let bw=0, bh=0, dpr=1;
 
-  const defaultCategories = [
-    "Alimentação","Moradia","Transporte","Saúde","Educação","Lazer","Assinaturas","Compras","Impostos","Outros"
-  ];
+  const stars = [];
+  const STAR_COUNT = 160;
 
-  /** @type {{ transactions: Array<{id:string, date:string, desc:string, value:number, type:"receita"|"despesa", category:string, account:string}> }} */
-  let state = loadState();
-
-  // Elements
-  const monthSelect = document.getElementById("monthSelect");
-  const monthLabel = document.getElementById("monthLabel");
-  const exportBtn = document.getElementById("exportBtn");
-
-  const descEl = document.getElementById("desc");
-  const valueEl = document.getElementById("value");
-  const typeEl = document.getElementById("type");
-  const categoryEl = document.getElementById("category");
-  const accountEl = document.getElementById("account");
-  const dateEl = document.getElementById("date");
-  const addBtn = document.getElementById("addBtn");
-  const resetBtn = document.getElementById("resetBtn");
-
-  const quickExpense = document.getElementById("quickExpense");
-  const quickIncome = document.getElementById("quickIncome");
-
-  const kpiSaldo = document.getElementById("kpiSaldo");
-  const kpiReceitas = document.getElementById("kpiReceitas");
-  const kpiDespesas = document.getElementById("kpiDespesas");
-
-  const txTableBody = document.querySelector("#txTable tbody");
-  const chart = document.getElementById("chart");
-  const topCats = document.getElementById("topCats");
-
-  // Init
-  initDateDefaults();
-  initCategories();
-  initMonthPicker();
-  render();
-
-  // Events
-  addBtn.addEventListener("click", () => addTransaction());
-  resetBtn.addEventListener("click", () => {
-    if (!confirm("Tem certeza que quer zerar tudo?")) return;
-    state = { transactions: [] };
-    saveState();
-    initMonthPicker();
-    render();
-  });
-
-  exportBtn.addEventListener("click", exportData);
-
-  quickExpense.addEventListener("click", () => {
-    typeEl.value = "despesa";
-    descEl.focus();
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
-  quickIncome.addEventListener("click", () => {
-    typeEl.value = "receita";
-    descEl.focus();
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
-
-  monthSelect.addEventListener("change", render);
-
-  function initDateDefaults(){
-    const today = new Date();
-    dateEl.value = toISODate(today);
-  }
-
-  function initCategories(){
-    categoryEl.innerHTML = "";
-    for (const c of defaultCategories){
-      const opt = document.createElement("option");
-      opt.value = c;
-      opt.textContent = c;
-      categoryEl.appendChild(opt);
+  function resizeBg(){
+    dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+    bw = bg.width = Math.floor(innerWidth * dpr);
+    bh = bg.height = Math.floor(innerHeight * dpr);
+    bg.style.width = "100%";
+    bg.style.height = "100%";
+    stars.length = 0;
+    for (let i=0;i<STAR_COUNT;i++){
+      stars.push({
+        x: Math.random()*bw,
+        y: Math.random()*bh,
+        z: Math.random()*1 + 0.2,
+        r: (Math.random()*1.2 + 0.3)*dpr,
+        s: (Math.random()*0.55 + 0.15)*dpr
+      });
     }
   }
+  addEventListener("resize", resizeBg);
+  resizeBg();
 
-  function initMonthPicker(){
-    const months = getMonthsFromState(state.transactions);
+  let t0 = performance.now();
+  function drawBg(now){
+    const dt = Math.min(32, now - t0);
+    t0 = now;
+
+    // base fill with subtle vignette
+    bctx.clearRect(0,0,bw,bh);
+    const base = bctx.createLinearGradient(0,0,0,bh);
+    base.addColorStop(0, "rgba(5,7,18,0.35)");
+    base.addColorStop(1, "rgba(10,16,48,0.55)");
+    bctx.fillStyle = base;
+    bctx.fillRect(0,0,bw,bh);
+
+    // aurora ribbons
+    const time = now * 0.00025;
+    for (let k=0;k<3;k++){
+      const yMid = (0.18 + k*0.14) * bh;
+      const amp = (0.06 + k*0.015) * bh;
+      const phase = time* (1.3 + k*0.25);
+      const grad = bctx.createLinearGradient(0, yMid-amp, 0, yMid+amp);
+      grad.addColorStop(0, "rgba(80,255,210,0)");
+      grad.addColorStop(0.45, `rgba(${120+k*30}, ${220-k*18}, ${255-k*40}, 0.13)`);
+      grad.addColorStop(0.65, `rgba(${200-k*20}, ${140+k*10}, ${255-k*30}, 0.10)`);
+      grad.addColorStop(1, "rgba(255,120,220,0)");
+      bctx.strokeStyle = grad;
+      bctx.lineWidth = (38 - k*8) * dpr;
+      bctx.lineCap = "round";
+
+      bctx.beginPath();
+      const step = 24 * dpr;
+      for (let x=0; x<=bw; x+=step){
+        const n1 = Math.sin(x*0.003*dpr + phase) * 0.6;
+        const n2 = Math.sin(x*0.0016*dpr + phase*1.6) * 0.4;
+        const y = yMid + (n1+n2) * amp + Math.sin(phase*2 + k) * (10*dpr);
+        if (x===0) bctx.moveTo(x, y);
+        else bctx.lineTo(x, y);
+      }
+      bctx.globalCompositeOperation = "screen";
+      bctx.stroke();
+      bctx.globalCompositeOperation = "source-over";
+    }
+
+    // stars drift
+    bctx.globalCompositeOperation = "lighter";
+    for (const s of stars){
+      s.y += s.s * (dt/16) * (0.55 + s.z);
+      s.x += 0.06 * dpr * (dt/16) * (0.4 + s.z);
+      if (s.y > bh + 20) { s.y = -20; s.x = Math.random()*bw; }
+      if (s.x > bw + 20) { s.x = -20; s.y = Math.random()*bh; }
+
+      bctx.fillStyle = `rgba(255,255,255,${0.25 + s.z*0.35})`;
+      bctx.beginPath();
+      bctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      bctx.fill();
+
+      // tiny glow
+      bctx.fillStyle = `rgba(160,140,255,${0.06 + s.z*0.08})`;
+      bctx.beginPath();
+      bctx.arc(s.x, s.y, s.r*3.2, 0, Math.PI*2);
+      bctx.fill();
+    }
+    bctx.globalCompositeOperation = "source-over";
+
+    requestAnimationFrame(drawBg);
+  }
+  requestAnimationFrame(drawBg);
+
+  /* =========================
+     APP STATE (localStorage)
+     ========================= */
+  const KEY = "lifeos_v1";
+  /** @type {{
+    tasks: Array<{id:string,title:string,priority:string,status:string,date:string,area:string,createdAt:number,doneAt?:number}>,
+    habits: Array<{id:string,name:string,freq:string,area:string,active:boolean,createdAt:number}>,
+    habitLog: Array<{id:string,habitId:string,date:string,done:boolean}>,
+    tx: Array<{id:string,desc:string,value:number,type:"receita"|"despesa",cat:string,acc:string,date:string,createdAt:number}>,
+    events: Array<{id:string,title:string,dt:string,place:string,tag:string,createdAt:number}>
+  }} */
+  let state = load();
+
+  function load(){
+    try{
+      const raw = localStorage.getItem(KEY);
+      if (!raw) return seed();
+      const parsed = JSON.parse(raw);
+      return {
+        tasks: Array.isArray(parsed.tasks) ? parsed.tasks : [],
+        habits: Array.isArray(parsed.habits) ? parsed.habits : [],
+        habitLog: Array.isArray(parsed.habitLog) ? parsed.habitLog : [],
+        tx: Array.isArray(parsed.tx) ? parsed.tx : [],
+        events: Array.isArray(parsed.events) ? parsed.events : [],
+      };
+    }catch{
+      return seed();
+    }
+  }
+  function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
+
+  function seed(){
+    const today = isoDate(new Date());
+    return {
+      tasks: [
+        { id: rid(), title:"Ex: Pagar fatura do cartão", priority:"🔥 Alta", status:"Próxima", date: today, area:"Finanças", createdAt: Date.now() },
+        { id: rid(), title:"Ex: Treino (superior)", priority:"✳️ Média", status:"Próxima", date: today, area:"Saúde", createdAt: Date.now() }
+      ],
+      habits: [
+        { id: rid(), name:"Beber 2L de água", freq:"Diário", area:"Saúde", active:true, createdAt: Date.now() },
+        { id: rid(), name:"Estudar 30 min", freq:"Diário", area:"Estudos", active:true, createdAt: Date.now() }
+      ],
+      habitLog: [],
+      tx: [
+        { id: rid(), desc:"Ex: Salário", value: 5000, type:"receita", cat:"Renda", acc:"Banco", date: today, createdAt: Date.now() },
+        { id: rid(), desc:"Ex: Mercado", value: 180.45, type:"despesa", cat:"Alimentação", acc:"Cartão", date: today, createdAt: Date.now() }
+      ],
+      events: []
+    };
+  }
+
+  /* =========================
+     DOM
+     ========================= */
+  const subtitle = document.getElementById("subtitle");
+  const todayLabel = document.getElementById("todayLabel");
+
+  const monthSelect = document.getElementById("monthSelect");
+  const monthLabel = document.getElementById("monthLabel");
+
+  // Home
+  const kpiTasks = document.getElementById("kpiTasks");
+  const kpiTasksSub = document.getElementById("kpiTasksSub");
+  const kpiHabits = document.getElementById("kpiHabits");
+  const kpiHabitsSub = document.getElementById("kpiHabitsSub");
+  const kpiSaldo = document.getElementById("kpiSaldo");
+  const homeTasks = document.getElementById("homeTasks");
+  const homeHabits = document.getElementById("homeHabits");
+  const homeEvents = document.getElementById("homeEvents");
+
+  // Tasks
+  const taskTitle = document.getElementById("taskTitle");
+  const taskPriority = document.getElementById("taskPriority");
+  const taskStatus = document.getElementById("taskStatus");
+  const taskDate = document.getElementById("taskDate");
+  const taskArea = document.getElementById("taskArea");
+  const addTaskBtn = document.getElementById("addTaskBtn");
+  const tasksList = document.getElementById("tasksList");
+  const taskFilterToday = document.getElementById("taskFilterToday");
+  const taskFilterWeek = document.getElementById("taskFilterWeek");
+  const taskFilterAll = document.getElementById("taskFilterAll");
+  let taskFilterMode = "week"; // "today" | "week" | "all"
+
+  // Habits
+  const habitName = document.getElementById("habitName");
+  const habitFreq = document.getElementById("habitFreq");
+  const habitArea = document.getElementById("habitArea");
+  const addHabitBtn = document.getElementById("addHabitBtn");
+  const habitsTodayList = document.getElementById("habitsTodayList");
+  const habitsChart = document.getElementById("habitsChart");
+  const habitsSummary = document.getElementById("habitsSummary");
+
+  // Finance
+  const finSaldo = document.getElementById("finSaldo");
+  const finRec = document.getElementById("finRec");
+  const finDesp = document.getElementById("finDesp");
+  const financeChart = document.getElementById("financeChart");
+  const financeCats = document.getElementById("financeCats");
+
+  const txDesc = document.getElementById("txDesc");
+  const txValue = document.getElementById("txValue");
+  const txType = document.getElementById("txType");
+  const txCat = document.getElementById("txCat");
+  const txAcc = document.getElementById("txAcc");
+  const txDate = document.getElementById("txDate");
+  const addTxBtn = document.getElementById("addTxBtn");
+  const txList = document.getElementById("txList");
+
+  // Agenda
+  const evTitle = document.getElementById("evTitle");
+  const evDateTime = document.getElementById("evDateTime");
+  const evPlace = document.getElementById("evPlace");
+  const evTag = document.getElementById("evTag");
+  const addEvBtn = document.getElementById("addEvBtn");
+  const eventsList = document.getElementById("eventsList");
+
+  // Global
+  const exportBtn = document.getElementById("exportBtn");
+  const resetBtn = document.getElementById("resetBtn");
+  const quickTask = document.getElementById("quickTask");
+  const quickTx = document.getElementById("quickTx");
+
+  // Tabs behavior
+  document.getElementById("tabs").addEventListener("click", (e) => {
+    const tab = e.target.closest(".tab");
+    if (!tab) return;
+    const key = tab.dataset.tab;
+    setTab(key);
+  });
+
+  function setTab(key){
+    document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.tab === key));
+    document.querySelectorAll(".section").forEach(s => s.classList.toggle("active", s.id === key));
+    // scroll top for mobile “app feel”
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  // Init defaults
+  const today = isoDate(new Date());
+  taskDate.value = today;
+  txDate.value = today;
+  subtitle.textContent = "Hoje: " + formatBR(today);
+  todayLabel.textContent = formatBR(today);
+
+  // Month picker
+  function initMonthSelect(){
+    const months = getMonths();
     monthSelect.innerHTML = "";
     for (const m of months){
       const opt = document.createElement("option");
@@ -470,157 +804,650 @@
       opt.textContent = m;
       monthSelect.appendChild(opt);
     }
-    // default selected: current month if exists, else latest
-    const cur = currentMonthKey();
-    if (months.includes(cur)) monthSelect.value = cur;
-    else monthSelect.value = months[0] || cur;
+    const cur = monthKey(new Date());
+    monthSelect.value = months.includes(cur) ? cur : months[0] || cur;
+    monthLabel.textContent = monthSelect.value;
+  }
+  monthSelect.addEventListener("change", () => {
+    monthLabel.textContent = monthSelect.value;
+    render();
+  });
+
+  // Categories
+  const CATS = ["Alimentação","Moradia","Transporte","Saúde","Educação","Lazer","Assinaturas","Compras","Impostos","Outros","Renda"];
+  function initCats(){
+    txCat.innerHTML = "";
+    for (const c of CATS){
+      const o = document.createElement("option");
+      o.value = c; o.textContent = c;
+      txCat.appendChild(o);
+    }
+    txCat.value = "Alimentação";
   }
 
-  function addTransaction(){
-    const desc = (descEl.value || "").trim();
-    const value = Number(valueEl.value);
-    const type = typeEl.value;
-    const category = categoryEl.value;
-    const account = accountEl.value;
-    const date = dateEl.value;
+  // Actions
+  addTaskBtn.addEventListener("click", () => {
+    const title = taskTitle.value.trim();
+    if (!title) return toast("Coloca o nome da tarefa 🙂");
+    state.tasks.unshift({
+      id: rid(),
+      title,
+      priority: taskPriority.value,
+      status: taskStatus.value,
+      date: taskDate.value || "",
+      area: taskArea.value.trim(),
+      createdAt: Date.now()
+    });
+    save();
+    taskTitle.value = "";
+    toast("Tarefa salva ✅");
+    render();
+  });
 
-    if (!desc) return toast("Coloca uma descrição 🙂");
-    if (!date) return toast("Escolhe uma data");
+  function toggleTaskDone(id){
+    const t = state.tasks.find(x => x.id === id);
+    if (!t) return;
+    if (t.status === "Feito"){
+      t.status = "Próxima";
+      delete t.doneAt;
+    } else {
+      t.status = "Feito";
+      t.doneAt = Date.now();
+    }
+    save(); render();
+  }
+  function deleteTask(id){
+    state.tasks = state.tasks.filter(x => x.id !== id);
+    save(); render();
+  }
+
+  taskFilterToday.addEventListener("click", () => { taskFilterMode="today"; render(); toast("Filtro: Hoje"); });
+  taskFilterWeek.addEventListener("click", () => { taskFilterMode="week"; render(); toast("Filtro: Semana"); });
+  taskFilterAll.addEventListener("click", () => { taskFilterMode="all"; render(); toast("Filtro: Todas"); });
+
+  addHabitBtn.addEventListener("click", () => {
+    const name = habitName.value.trim();
+    if (!name) return toast("Nome do hábito 🙂");
+    state.habits.unshift({
+      id: rid(),
+      name,
+      freq: habitFreq.value,
+      area: habitArea.value.trim(),
+      active: true,
+      createdAt: Date.now()
+    });
+    save();
+    habitName.value = "";
+    toast("Hábito salvo 🔁");
+    render();
+  });
+
+  function toggleHabitToday(habitId){
+    const d = today;
+    const key = habitId + "|" + d;
+    let log = state.habitLog.find(x => (x.habitId + "|" + x.date) === key);
+    if (!log){
+      log = { id: rid(), habitId, date:d, done:true };
+      state.habitLog.push(log);
+    } else {
+      log.done = !log.done;
+    }
+    save(); render();
+  }
+  function deleteHabit(id){
+    state.habits = state.habits.filter(h => h.id !== id);
+    state.habitLog = state.habitLog.filter(l => l.habitId !== id);
+    save(); render();
+  }
+
+  addTxBtn.addEventListener("click", () => {
+    const desc = txDesc.value.trim();
+    const value = Number(txValue.value);
+    if (!desc) return toast("Coloca a descrição 🙂");
     if (!Number.isFinite(value) || value <= 0) return toast("Valor inválido");
+    const date = txDate.value || today;
 
-    const tx = {
-      id: cryptoRandomId(),
-      date,
+    state.tx.unshift({
+      id: rid(),
       desc,
       value: round2(value),
-      type,
-      category,
-      account
-    };
-    state.transactions.unshift(tx); // latest first
-    saveState();
-    // Reset minimal
-    descEl.value = "";
-    valueEl.value = "";
-    typeEl.value = "despesa";
-    categoryEl.value = category;
-    accountEl.value = account;
-    dateEl.value = date;
-
-    initMonthPicker();
+      type: txType.value,
+      cat: txCat.value,
+      acc: txAcc.value,
+      date,
+      createdAt: Date.now()
+    });
+    save();
+    txDesc.value = ""; txValue.value = "";
+    toast("Transação salva 💸");
+    initMonthSelect();
     render();
-    toast("Salvo ✅");
+  });
+
+  function deleteTx(id){
+    state.tx = state.tx.filter(x => x.id !== id);
+    save(); initMonthSelect(); render();
   }
 
-  function deleteTransaction(id){
-    state.transactions = state.transactions.filter(t => t.id !== id);
-    saveState();
-    initMonthPicker();
+  addEvBtn.addEventListener("click", () => {
+    const title = evTitle.value.trim();
+    const dt = evDateTime.value;
+    if (!title) return toast("Nome do evento 🙂");
+    if (!dt) return toast("Escolhe data e hora");
+    state.events.unshift({
+      id: rid(),
+      title,
+      dt,
+      place: evPlace.value.trim(),
+      tag: evTag.value.trim(),
+      createdAt: Date.now()
+    });
+    save();
+    evTitle.value = ""; evPlace.value=""; evTag.value="";
+    toast("Evento salvo 📅");
     render();
-    toast("Excluído");
+  });
+
+  function deleteEvent(id){
+    state.events = state.events.filter(e => e.id !== id);
+    save(); render();
   }
 
+  exportBtn.addEventListener("click", () => {
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `lifeos-export-${today}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  });
+
+  resetBtn.addEventListener("click", () => {
+    if (!confirm("Zerar tudo? Isso apaga seus dados salvos no aparelho.")) return;
+    localStorage.removeItem(KEY);
+    state = seed();
+    save();
+    initMonthSelect(); initCats();
+    toast("Resetado ✅");
+    render();
+  });
+
+  quickTask.addEventListener("click", () => { setTab("tasks"); setTimeout(()=>taskTitle.focus(), 200); });
+  quickTx.addEventListener("click", () => { setTab("finance"); setTimeout(()=>txDesc.focus(), 200); });
+
+  /* =========================
+     RENDER
+     ========================= */
   function render(){
-    const monthKey = monthSelect.value || currentMonthKey();
-    monthLabel.textContent = monthKey;
+    renderHome();
+    renderTasks();
+    renderHabits();
+    renderFinance();
+    renderAgenda();
+  }
 
-    const txMonth = state.transactions.filter(t => monthFromDate(t.date) === monthKey);
+  function renderHome(){
+    // tasks today pending
+    const tToday = state.tasks.filter(t => t.date === today && t.status !== "Feito" && t.status !== "Cancelado");
+    kpiTasks.textContent = String(tToday.length);
+    kpiTasksSub.textContent = tToday.length === 1 ? "pendente" : "pendentes";
 
-    const receitas = sum(txMonth.filter(t => t.type === "receita").map(t => t.value));
-    const despesas = sum(txMonth.filter(t => t.type === "despesa").map(t => t.value));
-    const saldo = receitas - despesas;
+    // habits completion today
+    const activeHabits = state.habits.filter(h => h.active);
+    const doneToday = activeHabits.filter(h => isHabitDone(h.id, today)).length;
+    const pct = activeHabits.length ? Math.round((doneToday/activeHabits.length)*100) : 0;
+    kpiHabits.textContent = pct + "%";
+    kpiHabitsSub.textContent = `${doneToday}/${activeHabits.length} feitos`;
 
-    kpiReceitas.textContent = brl(receitas);
-    kpiDespesas.textContent = brl(despesas);
+    // finance saldo month
+    const m = monthSelect.value || monthKey(new Date());
+    const txMonth = state.tx.filter(x => x.date.slice(0,7) === m);
+    const rec = sum(txMonth.filter(x=>x.type==="receita").map(x=>x.value));
+    const desp = sum(txMonth.filter(x=>x.type==="despesa").map(x=>x.value));
+    const saldo = rec - desp;
     kpiSaldo.textContent = brl(saldo);
     kpiSaldo.style.color = saldo >= 0 ? "rgba(56,217,150,.95)" : "rgba(255,92,122,.95)";
 
-    renderTable(txMonth.slice(0, 12));
-    renderCategoriesChart(txMonth);
+    // home tasks list: next 5 (today first, then nearest future)
+    const upcoming = state.tasks
+      .filter(t => t.status !== "Feito" && t.status !== "Cancelado")
+      .slice()
+      .sort((a,b) => (a.date||"9999-99-99").localeCompare(b.date||"9999-99-99"));
+    homeTasks.innerHTML = "";
+    (upcoming.slice(0,5)).forEach(t => homeTasks.appendChild(taskCard(t, true)));
+
+    // habits checklist
+    homeHabits.innerHTML = "";
+    activeHabits.slice(0,8).forEach(h => homeHabits.appendChild(habitCard(h, true)));
+
+    // events next 7 days
+    homeEvents.innerHTML = "";
+    const now = new Date();
+    const limit = new Date(now.getTime() + 7*24*3600*1000);
+    const events = state.events
+      .slice()
+      .filter(e => {
+        const d = new Date(e.dt);
+        return d >= now && d <= limit;
+      })
+      .sort((a,b)=>a.dt.localeCompare(b.dt))
+      .slice(0,5);
+    if (events.length === 0){
+      homeEvents.appendChild(emptyCard("Sem eventos nos próximos 7 dias ✨"));
+    } else {
+      events.forEach(e => homeEvents.appendChild(eventCard(e, false)));
+    }
   }
 
-  function renderTable(list){
-    txTableBody.innerHTML = "";
+  function renderTasks(){
+    tasksList.innerHTML = "";
+    const now = new Date();
+    const weekEnd = new Date(now.getTime() + 7*24*3600*1000);
+    const weekEndIso = isoDate(weekEnd);
+
+    let list = state.tasks.slice();
+
+    if (taskFilterMode === "today"){
+      list = list.filter(t => t.date === today);
+    } else if (taskFilterMode === "week"){
+      list = list.filter(t => t.date && t.date >= today && t.date <= weekEndIso);
+    } // all = no filter
+
+    // show non-done first
+    list.sort((a,b) => {
+      const ad = a.status === "Feito" ? 1 : 0;
+      const bd = b.status === "Feito" ? 1 : 0;
+      if (ad !== bd) return ad - bd;
+      return (a.date||"9999-99-99").localeCompare(b.date||"9999-99-99");
+    });
+
     if (list.length === 0){
-      const tr = document.createElement("tr");
-      tr.innerHTML = `<td colspan="4" style="color:rgba(255,255,255,.55); padding:14px 8px;">
-        Sem lançamentos no mês. Bora começar 👇
-      </td>`;
-      txTableBody.appendChild(tr);
+      tasksList.appendChild(emptyCard("Nada aqui. Cria uma tarefa ali em cima ✅"));
       return;
     }
+    list.slice(0,50).forEach(t => tasksList.appendChild(taskCard(t, false)));
+  }
 
-    for (const t of list){
-      const tr = document.createElement("tr");
-      const pillClass = t.type === "receita" ? "good" : "bad";
-      const sign = t.type === "receita" ? "+" : "−";
-      tr.innerHTML = `
-        <td>${formatBRDate(t.date)}</td>
-        <td>${escapeHtml(t.desc)}<div class="pill">${escapeHtml(t.account)}</div></td>
-        <td>${escapeHtml(t.category)}</td>
-        <td>
-          <span class="pill ${pillClass}">${sign} ${brl(t.value)}</span>
-        </td>
-      `;
-      tr.style.cursor = "pointer";
-      tr.title = "Toque para excluir";
-      tr.addEventListener("click", () => {
-        if (confirm(`Excluir "${t.desc}" (${brl(t.value)})?`)) deleteTransaction(t.id);
-      });
-      txTableBody.appendChild(tr);
+  function renderHabits(){
+    // today checklist
+    habitsTodayList.innerHTML = "";
+    const active = state.habits.filter(h => h.active);
+    if (active.length === 0){
+      habitsTodayList.appendChild(emptyCard("Crie um hábito para começar 🔁"));
+    } else {
+      active.forEach(h => habitsTodayList.appendChild(habitCard(h, false)));
+    }
+
+    // 7-day chart
+    drawHabits7d();
+  }
+
+  function renderFinance(){
+    const m = monthSelect.value || monthKey(new Date());
+    monthLabel.textContent = m;
+
+    const txMonth = state.tx.filter(x => x.date.slice(0,7) === m);
+    const rec = sum(txMonth.filter(x=>x.type==="receita").map(x=>x.value));
+    const desp = sum(txMonth.filter(x=>x.type==="despesa").map(x=>x.value));
+    const saldo = rec - desp;
+
+    finRec.textContent = brl(rec);
+    finDesp.textContent = brl(desp);
+    finSaldo.textContent = brl(saldo);
+    finSaldo.style.color = saldo >= 0 ? "rgba(56,217,150,.95)" : "rgba(255,92,122,.95)";
+
+    // categories chart
+    drawFinanceCats(txMonth);
+
+    // list
+    txList.innerHTML = "";
+    const list = txMonth.slice(0,12);
+    if (list.length === 0){
+      txList.appendChild(emptyCard("Sem lançamentos no mês. Bora lançar um gasto 💸"));
+    } else {
+      list.forEach(t => txList.appendChild(txCard(t)));
     }
   }
 
-  function renderCategoriesChart(txMonth){
+  function renderAgenda(){
+    eventsList.innerHTML = "";
+    const now = new Date();
+    const limit = new Date(now.getTime() + 30*24*3600*1000);
+    const list = state.events
+      .slice()
+      .filter(e => {
+        const d = new Date(e.dt);
+        return d >= now && d <= limit;
+      })
+      .sort((a,b)=>a.dt.localeCompare(b.dt));
+
+    if (list.length === 0){
+      eventsList.appendChild(emptyCard("Sem eventos nos próximos 30 dias 📅"));
+      return;
+    }
+    list.slice(0,40).forEach(e => eventsList.appendChild(eventCard(e, true)));
+  }
+
+  /* =========================
+     COMPONENTS
+     ========================= */
+  function emptyCard(text){
+    const div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = `<div class="main"><b style="color:rgba(255,255,255,.75)">${escape(text)}</b><div class="hint">✨</div></div>`;
+    return div;
+  }
+
+  function taskCard(t, compact){
+    const div = document.createElement("div");
+    div.className = "item";
+    const done = t.status === "Feito";
+    const date = t.date ? formatBR(t.date) : "sem data";
+    const area = t.area ? `<span class="pill">${escape(t.area)}</span>` : "";
+    const statusPill = done ? `<span class="pill good">Feito</span>` : `<span class="pill warn">${escape(t.status)}</span>`;
+    const pr = `<span class="pill">${escape(t.priority)}</span>`;
+    div.innerHTML = `
+      <div class="main">
+        <b style="text-decoration:${done ? "line-through" : "none"}; color:${done ? "rgba(255,255,255,.55)" : "rgba(255,255,255,.92)"}">
+          ${escape(t.title)}
+        </b>
+        <div class="meta">
+          ${statusPill}
+          ${pr}
+          <span class="pill">📅 ${date}</span>
+          ${area}
+        </div>
+      </div>
+      <div class="actions">
+        <button class="iconbtn ${done ? "" : "primary"}" title="Concluir">
+          ${done ? "↩️" : "✅"}
+        </button>
+        ${compact ? "" : `<button class="iconbtn danger" title="Excluir">🗑️</button>`}
+      </div>
+    `;
+    const [btnDone, btnDel] = div.querySelectorAll("button");
+    btnDone.addEventListener("click", () => toggleTaskDone(t.id));
+    if (!compact && btnDel){
+      btnDel.addEventListener("click", () => {
+        if (confirm(`Excluir tarefa: "${t.title}"?`)) deleteTask(t.id);
+      });
+    }
+    // tap on card toggles done on mobile feel
+    div.addEventListener("dblclick", () => toggleTaskDone(t.id));
+    return div;
+  }
+
+  function habitCard(h, compact){
+    const div = document.createElement("div");
+    div.className = "item";
+    const done = isHabitDone(h.id, today);
+    const freq = `<span class="pill">${escape(h.freq)}</span>`;
+    const area = h.area ? `<span class="pill">${escape(h.area)}</span>` : "";
+    div.innerHTML = `
+      <div class="main">
+        <b>${escape(h.name)}</b>
+        <div class="meta">
+          ${done ? `<span class="pill good">Feito hoje</span>` : `<span class="pill warn">Pendente</span>`}
+          ${freq}
+          ${area}
+        </div>
+      </div>
+      <div class="actions">
+        <button class="iconbtn ${done ? "" : "primary"}" title="Marcar hoje">${done ? "↩️" : "✅"}</button>
+        ${compact ? "" : `<button class="iconbtn danger" title="Excluir">🗑️</button>`}
+      </div>
+    `;
+    const [btnToggle, btnDel] = div.querySelectorAll("button");
+    btnToggle.addEventListener("click", () => toggleHabitToday(h.id));
+    if (!compact && btnDel){
+      btnDel.addEventListener("click", () => {
+        if (confirm(`Excluir hábito: "${h.name}"?`)) deleteHabit(h.id);
+      });
+    }
+    return div;
+  }
+
+  function txCard(t){
+    const div = document.createElement("div");
+    div.className = "item";
+    const pillClass = t.type === "receita" ? "good" : "bad";
+    const sign = t.type === "receita" ? "+" : "−";
+    div.innerHTML = `
+      <div class="main">
+        <b>${escape(t.desc)}</b>
+        <div class="meta">
+          <span class="pill">${escape(t.acc)}</span>
+          <span class="pill">${escape(t.cat)}</span>
+          <span class="pill">📅 ${formatBR(t.date)}</span>
+        </div>
+      </div>
+      <div class="actions">
+        <span class="pill ${pillClass}">${sign} ${brl(t.value)}</span>
+        <button class="iconbtn danger" title="Excluir">🗑️</button>
+      </div>
+    `;
+    div.querySelector("button").addEventListener("click", () => {
+      if (confirm(`Excluir "${t.desc}" (${brl(t.value)})?`)) deleteTx(t.id);
+    });
+    return div;
+  }
+
+  function eventCard(e, withDelete){
+    const div = document.createElement("div");
+    div.className = "item";
+    const d = new Date(e.dt);
+    const when = `${pad2(d.getDate())}/${pad2(d.getMonth()+1)} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+    const tag = e.tag ? `<span class="pill">${escape(e.tag)}</span>` : "";
+    const place = e.place ? `<span class="pill">📍 ${escape(e.place)}</span>` : "";
+    div.innerHTML = `
+      <div class="main">
+        <b>${escape(e.title)}</b>
+        <div class="meta">
+          <span class="pill">⏱️ ${when}</span>
+          ${tag}
+          ${place}
+        </div>
+      </div>
+      <div class="actions">
+        ${withDelete ? `<button class="iconbtn danger" title="Excluir">🗑️</button>` : `<span class="pill">📅</span>`}
+      </div>
+    `;
+    const btn = div.querySelector("button");
+    if (btn){
+      btn.addEventListener("click", () => {
+        if (confirm(`Excluir evento: "${e.title}"?`)) deleteEvent(e.id);
+      });
+    }
+    return div;
+  }
+
+  /* =========================
+     CHARTS
+     ========================= */
+  function drawFinanceCats(txMonth){
     const byCat = new Map();
     for (const t of txMonth){
       if (t.type !== "despesa") continue;
-      byCat.set(t.category, (byCat.get(t.category) || 0) + t.value);
+      byCat.set(t.cat, (byCat.get(t.cat) || 0) + t.value);
     }
-    const sorted = [...byCat.entries()].sort((a,b) => b[1]-a[1]).slice(0, 6);
+    const top = [...byCat.entries()].sort((a,b)=>b[1]-a[1]).slice(0,6);
 
-    // textual top cats
-    if (sorted.length === 0){
-      topCats.textContent = "Sem despesas no mês ainda. ✨";
-    } else {
-      topCats.innerHTML = sorted.map(([c,v]) => `• <b>${escapeHtml(c)}</b>: ${brl(v)}`).join("<br/>");
+    if (top.length === 0){
+      financeCats.textContent = "Sem despesas no mês ainda. ✨";
+      clearCanvas(financeChart);
+      return;
     }
+    financeCats.innerHTML = top.map(([c,v]) => `• <b>${escape(c)}</b>: ${brl(v)}`).join("<br/>");
+    drawBars(financeChart, top.map(x=>x[0]), top.map(x=>x[1]));
+  }
 
-    // draw chart (simple bar chart)
-    const ctx = chart.getContext("2d");
-    const w = chart.width = chart.clientWidth * devicePixelRatio();
-    const h = chart.height = chart.clientHeight * devicePixelRatio();
+  function drawHabits7d(){
+    const active = state.habits.filter(h => h.active);
+    const days = [];
+    for (let i=6;i>=0;i--){
+      const d = new Date();
+      d.setDate(d.getDate()-i);
+      days.push(isoDate(d));
+    }
+    // completion per day
+    const rates = days.map(d => {
+      if (active.length === 0) return 0;
+      const done = active.filter(h => isHabitDone(h.id, d)).length;
+      return done / active.length;
+    });
+
+    const avg = rates.reduce((a,b)=>a+b,0) / (rates.length || 1);
+    habitsSummary.textContent = active.length
+      ? `Média 7 dias: ${Math.round(avg*100)}% • Hábitos ativos: ${active.length}`
+      : "Crie hábitos para ver o gráfico.";
+
+    // draw line-ish bars
+    const labels = days.map(d => d.slice(8,10)+"/"+d.slice(5,7));
+    drawBars(habitsChart, labels, rates.map(r => Math.round(r*100)), { suffix:"%" });
+  }
+
+  function drawBars(canvas, labels, values, opt={}){
+    const ctx = canvas.getContext("2d");
+    const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+    const w = canvas.width = Math.floor(canvas.clientWidth * dpr);
+    const h = canvas.height = Math.floor(canvas.clientHeight * dpr);
     ctx.clearRect(0,0,w,h);
 
-    // background glow
+    // bg glow
     const g = ctx.createLinearGradient(0,0,w,h);
     g.addColorStop(0, "rgba(160,140,255,.10)");
     g.addColorStop(1, "rgba(50,210,255,.06)");
     ctx.fillStyle = g;
     ctx.fillRect(0,0,w,h);
 
-    const pad = 18 * devicePixelRatio();
+    const pad = 18*dpr;
     const innerW = w - pad*2;
     const innerH = h - pad*2;
 
-    // axes baseline
     ctx.strokeStyle = "rgba(255,255,255,.12)";
-    ctx.lineWidth = 1 * devicePixelRatio();
+    ctx.lineWidth = 1*dpr;
     ctx.beginPath();
     ctx.moveTo(pad, pad + innerH);
     ctx.lineTo(pad + innerW, pad + innerH);
     ctx.stroke();
 
-    if (sorted.length === 0) return;
+    const maxV = Math.max(...values, 1);
+    const gap = 10*dpr;
+    const barW = (innerW - gap*(values.length-1)) / values.length;
 
-    const maxV = Math.max(...sorted.map(x => x[1])) || 1;
-    const gap = 10 * devicePixelRatio();
-    const barW = (innerW - gap*(sorted.length-1)) / sorted.length;
-
-    sorted.forEach(([cat,val], i) => {
+    values.forEach((val, i) => {
       const x = pad + i*(barW+gap);
-      const barH = (val / maxV) * (innerH * 0.88);
+      const barH = (val / maxV) * (innerH * 0.86);
       const y = pad + innerH - barH;
 
-      // bar gradient (fake 3D)
-      const bg = ctx.createLinearGra
+      const bg = ctx.createLinearGradient(x, y, x + barW, y + barH);
+      bg.addColorStop(0, "rgba(255,255,255,.16)");
+      bg.addColorStop(.5, "rgba(160,140,255,.26)");
+      bg.addColorStop(1, "rgba(50,210,255,.18)");
+      ctx.fillStyle = bg;
+
+      roundRect(ctx, x, y, barW, barH, 10*dpr);
+      ctx.fill();
+
+      ctx.strokeStyle = "rgba(255,255,255,.18)";
+      ctx.lineWidth = 1*dpr;
+      roundRect(ctx, x, y, barW, barH, 10*dpr);
+      ctx.stroke();
+    });
+  }
+
+  function clearCanvas(canvas){
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+
+  /* =========================
+     HELPERS
+     ========================= */
+  function isHabitDone(habitId, date){
+    return !!state.habitLog.find(l => l.habitId === habitId && l.date === date && l.done);
+  }
+
+  function getMonths(){
+    const set = new Set([monthKey(new Date())]);
+    for (const t of state.tx){
+      if (t.date && t.date.length >= 7) set.add(t.date.slice(0,7));
+    }
+    return [...set].sort((a,b) => a < b ? 1 : -1);
+  }
+
+  function monthKey(d){
+    const y = d.getFullYear();
+    const m = String(d.getMonth()+1).padStart(2,"0");
+    return `${y}-${m}`;
+  }
+
+  function isoDate(d){
+    const y = d.getFullYear();
+    const m = String(d.getMonth()+1).padStart(2,"0");
+    const dd = String(d.getDate()).padStart(2,"0");
+    return `${y}-${m}-${dd}`;
+  }
+
+  function formatBR(iso){
+    if (!iso || iso.length < 10) return iso || "";
+    return `${iso.slice(8,10)}/${iso.slice(5,7)}/${iso.slice(0,4)}`;
+  }
+
+  function brl(n){
+    return (n||0).toLocaleString("pt-BR", { style:"currency", currency:"BRL" });
+  }
+  function sum(arr){ return arr.reduce((a,b)=>a+b,0); }
+  function round2(n){ return Math.round(n*100)/100; }
+
+  function rid(){
+    return (crypto?.randomUUID?.() || ("id_" + Math.random().toString(16).slice(2) + Date.now().toString(16)));
+  }
+
+  function pad2(n){ return String(n).padStart(2,"0"); }
+
+  function escape(s){
+    return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+  }
+
+  function toast(msg){
+    const t = document.createElement("div");
+    t.textContent = msg;
+    t.style.position = "fixed";
+    t.style.left = "50%";
+    t.style.bottom = "88px";
+    t.style.transform = "translateX(-50%)";
+    t.style.padding = "10px 14px";
+    t.style.borderRadius = "999px";
+    t.style.border = "1px solid rgba(255,255,255,.14)";
+    t.style.background = "rgba(0,0,0,.45)";
+    t.style.backdropFilter = "blur(12px)";
+    t.style.boxShadow = "0 18px 40px rgba(0,0,0,.45)";
+    t.style.zIndex = "999";
+    document.body.appendChild(t);
+    setTimeout(()=>{ t.style.opacity="0"; t.style.transition="opacity .25s ease"; }, 1200);
+    setTimeout(()=> t.remove(), 1600);
+  }
+
+  function roundRect(ctx, x, y, w, h, r){
+    const rr = Math.min(r, w/2, h/2);
+    ctx.beginPath();
+    ctx.moveTo(x+rr, y);
+    ctx.arcTo(x+w, y, x+w, y+h, rr);
+    ctx.arcTo(x+w, y+h, x, y+h, rr);
+    ctx.arcTo(x, y+h, x, y, rr);
+    ctx.arcTo(x, y, x+w, y, rr);
+    ctx.closePath();
+  }
+
+  // Init
+  initCats();
+  initMonthSelect();
+  render();
+})();
+</script>
+</body>
+</html>
